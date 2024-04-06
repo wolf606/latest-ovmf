@@ -36,7 +36,7 @@ RUN git submodule update --init --recursive
 # Source edksetup script
 RUN . ./edksetup.sh \
     && make -C BaseTools \
-    && build -a X64 -b RELEASE -t GCC5 -p OvmfPkg/OvmfPkgX64.dsc
+    && build -a X64 -b RELEASE -t GCC5 -p OvmfPkg/OvmfPkgX64.dsc -DSECURE_BOOT_ENABLE=TRUE
 
 # Copy the generated binaries to the output directory
 RUN mkdir -p /output \
