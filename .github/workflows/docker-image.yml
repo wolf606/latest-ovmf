@@ -30,6 +30,8 @@ jobs:
               curl
             # Create symbolic link for python
             sudo ln -s $(which python3) /usr/local/bin/python
+            # Create artifacts folder
+            mkdir artifacts
         - name: Clone latest EDK2 release
           run: |
             # Get latest release
@@ -55,5 +57,19 @@ jobs:
           run: |
             # Source edksetup script
             . ./edksetup.sh
-            # Build OVMF image
-            build -a X64 -b RELEASE -t GCC5 -p OvmfPkg/OvmfPkgX64.dsc -DSECURE_BOOT_ENABLE=TRUE
+            IFS=', ' read -r -a TARGETS <<< "$TARGETS"
+            IFS=', ' read -r -a ARCHS <<< "$ARCHS"
+            for target in "${TARGETS[@]}"; do
+              for arch in "${ARCHS[@]}"; do
+                build -a "$arch" -b "$target" -t GCC5 -p OvmfPkg/OvmfPkg"$arch".dsc -DSECURE_BOOT_ENABLE=TRUE
+                cd ..
+                mkdir -p artifacts/"$arch"/"$target"
+                cp edk2/Build/Ovmf"$arch"/"$target"/FV/OVMF_CODE.fd artifacts/"$arch"/"$target"
+                cp edk2/Build/Ovmf"$arch"/"$target"/FV/OVMF_VARS.fd artifacts/"$arch"/"$target"
+                cp edk2/Build/Ovmf"$arch"/"$target"/FV/OVMF.fd artifacts/"$arch"/"$target"
+                cd edk2
+              done
+            done
+          env:
+            ARCHS: Ia32,X64,3264
+            TARGETS: RELEASE,DEBUG,NOOPT
