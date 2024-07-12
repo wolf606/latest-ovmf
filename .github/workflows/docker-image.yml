@@ -16,8 +16,6 @@ jobs:
         - uses: actions/checkout@v4
         - name: Install dependencies
           run: |
-            # Set non-interactive mode for apt
-            export DEBIAN_FRONTEND=noninteractive
             # Update package lists
             apt-get update
             # Install required packages
