@@ -68,9 +68,9 @@ jobs:
                 build -a "$arch" -b "$target" -t GCC5 -p OvmfPkg/OvmfPkg"$dsc".dsc -DSECURE_BOOT_ENABLE=TRUE
                 cd ..
                 mkdir -p artifacts/"$arch"/"$target"
-                cp edk2/Build/Ovmf"$arch"/"$target"/FV/OVMF_CODE.fd artifacts/"$arch"/"$target"
-                cp edk2/Build/Ovmf"$arch"/"$target"/FV/OVMF_VARS.fd artifacts/"$arch"/"$target"
-                cp edk2/Build/Ovmf"$arch"/"$target"/FV/OVMF.fd artifacts/"$arch"/"$target"
+                cp edk2/Build/Ovmf"$dsc"/"$target"/FV/OVMF_CODE.fd artifacts/"$arch"/"$target"
+                cp edk2/Build/Ovmf"$dsc"/"$target"/FV/OVMF_VARS.fd artifacts/"$arch"/"$target"
+                cp edk2/Build/Ovmf"$dsc"/"$target"/FV/OVMF.fd artifacts/"$arch"/"$target"
                 cd edk2
               done
             done
