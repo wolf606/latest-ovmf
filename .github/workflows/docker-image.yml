@@ -72,9 +72,12 @@ jobs:
                 cp edk2/Build/Ovmf"$dsc"/"$target"_GCC5/FV/OVMF_VARS.fd artifacts/"$arch"/"$target"
                 cp edk2/Build/Ovmf"$dsc"/"$target"_GCC5/FV/OVMF.fd artifacts/"$arch"/"$target"
                 echo "OVMF for $arch $target $dsc built successfully"
+                echo "Compressing artifacts to zip"
+                zip -r OVMF-"$arch"-"$target".zip artifacts/"$arch"/"$target"
                 cd edk2
               done
             done
+            ls -l
           env:
             ARCHS: IA32,X64
             TARGETS: RELEASE,DEBUG
