@@ -30,19 +30,28 @@ jobs:
               curl
             # Create symbolic link for python
             sudo ln -s $(which python3) /usr/local/bin/python
-        - name: Build EDK2
-          working-directory: /edk2
+        - name: Clone latest EDK2 release
           run: |
             # Get latest release
             LATEST_RELEASE=$(curl -s "https://api.github.com/repos/tianocore/edk2/releases/latest" | grep -o '"tag_name": "[^"]*' | sed 's/"tag_name": "//')
             export LATEST_RELEASE
             echo "Latest Release: $LATEST_RELEASE"
             # Clone EDK2 repository
-            git clone --depth 1 "https://github.com/tianocore/edk2.git" -b "$LATEST_RELEASE" .
+            git clone --depth 1 "https://github.com/tianocore/edk2.git" -b "$LATEST_RELEASE" edk2
+        - name: Update submodules
+          working-directory: /edk2
+          run: |
             # Update submodules
             git submodule update --init --recursive
+        - name: Run tests
+          run: |
+            # Source edksetup script
+            . ./edksetup.sh
+            # Run tests
+            make -C BaseTools
+        - name: Build OVMF
+          run: |
             # Source edksetup script
             . ./edksetup.sh
             # Build OVMF image
-            make -C BaseTools
             build -a X64 -b RELEASE -t GCC5 -p OvmfPkg/OvmfPkgX64.dsc -DSECURE_BOOT_ENABLE=TRUE
