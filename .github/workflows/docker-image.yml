@@ -64,6 +64,7 @@ jobs:
               for i in "${!ARCHS[@]}"; do
                 arch=${ARCHS[$i]}
                 dsc=${DSC[$i]}
+                echo "Building OVMF for $arch $target"
                 build -a "$arch" -b "$target" -t GCC5 -p OvmfPkg/OvmfPkg"$dsc"
                 cd ..
                 mkdir -p artifacts/"$arch"/"$target"
