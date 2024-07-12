@@ -17,9 +17,9 @@ jobs:
         - name: Install dependencies
           run: |
             # Update package lists
-            apt-get update
+            sudo apt-get update
             # Install required packages
-            apt-get install -y \
+            sudo apt-get install -y \
               build-essential \
               git \
               uuid-dev \
@@ -29,7 +29,7 @@ jobs:
               python3-pip \
               curl
             # Create symbolic link for python
-            ln -s $(which python3) /usr/local/bin/python
+            sudo ln -s $(which python3) /usr/local/bin/python
         - name: Build EDK2
           working-directory: /edk2
           run: |
