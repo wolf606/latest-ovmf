@@ -65,7 +65,7 @@ jobs:
                 arch=${ARCHS[$i]}
                 dsc=${DSC[$i]}
                 echo "Building OVMF for $arch $target $dsc"
-                build -a "$arch" -b "$target" -t GCC5 -p OvmfPkg/OvmfPkg"$dsc"
+                build -a "$arch" -b "$target" -t GCC5 -p OvmfPkg/OvmfPkg"$dsc".dsc -DSECURE_BOOT_ENABLE=TRUE
                 cd ..
                 mkdir -p artifacts/"$arch"/"$target"
                 cp edk2/Build/Ovmf"$arch"/"$target"/FV/OVMF_CODE.fd artifacts/"$arch"/"$target"
