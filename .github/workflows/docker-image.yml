@@ -39,7 +39,7 @@ jobs:
             # Clone EDK2 repository
             git clone --depth 1 "https://github.com/tianocore/edk2.git" -b "$LATEST_RELEASE" edk2
         - name: Update submodules
-          working-directory: /edk2
+          working-directory: edk2
           run: |
             # Update submodules
             git submodule update --init --recursive
