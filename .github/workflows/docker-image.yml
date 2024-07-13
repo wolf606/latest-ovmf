@@ -77,6 +77,7 @@ jobs:
                 cd edk2
               done
             done
+            cd ..
             mkdir -p artifacts/zip
             mv OVMF-*.zip artifacts/zip
           env:
