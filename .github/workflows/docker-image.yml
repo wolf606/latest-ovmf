@@ -77,8 +77,16 @@ jobs:
                 cd edk2
               done
             done
-            ls -l
+            mkdir -p artifacts/zip
+            mv OVMF-*.zip artifacts/zip
           env:
             ARCHS: IA32,X64
             TARGETS: RELEASE,DEBUG
             DSC: Ia32,X64
+        - name: Upload artifacts
+          uses: actions/upload-artifact@v2
+          with:
+            name: OVMF
+            path: artifacts/zip
+            if-no-files-found: error
+            retention-days: 1
