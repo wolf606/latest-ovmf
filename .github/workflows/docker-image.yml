@@ -117,7 +117,7 @@ jobs:
             DSC: Ia32,X64
             GUID: EA4BB293-2D7F-4456-A681-1F22F42CD0BC
         - name: Upload artifacts
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v4
           with:
             name: OVMF
             path: artifacts/zip
@@ -197,7 +197,7 @@ jobs:
             TARGETS: RELEASE,DEBUG
             DSC: Ia32,X64
         - name: Upload artifacts
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v4
           with:
             name: AUDK
             path: artifacts/zip
