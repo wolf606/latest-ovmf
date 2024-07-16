@@ -177,12 +177,12 @@ jobs:
                 arch=${ARCHS[$i]}
                 dsc=${DSC[$i]}
                 echo "Building OVMF for $arch $target $dsc"
-                build -a "$arch" -b "$target" -t GCC5 -p OvmfPkg/OvmfPkg"$dsc".dsc -D SECURE_BOOT_ENABLE=TRUE -D LINUX_LOADER
+                build -a "$arch" -b "$target" -t GCC -p OvmfPkg/OvmfPkg"$dsc".dsc -D SECURE_BOOT_ENABLE=TRUE -D LINUX_LOADER
                 cd ..
                 mkdir -p artifacts/"$arch"/"$target"
-                cp audk/Build/Ovmf"$dsc"/"$target"_GCC5/FV/OVMF_CODE.fd artifacts/"$arch"/"$target"
-                cp audk/Build/Ovmf"$dsc"/"$target"_GCC5/FV/OVMF_VARS.fd artifacts/"$arch"/"$target"
-                cp audk/Build/Ovmf"$dsc"/"$target"_GCC5/FV/OVMF.fd artifacts/"$arch"/"$target"
+                cp audk/Build/Ovmf"$dsc"/"$target"_GCC/FV/OVMF_CODE.fd artifacts/"$arch"/"$target"
+                cp audk/Build/Ovmf"$dsc"/"$target"_GCC/FV/OVMF_VARS.fd artifacts/"$arch"/"$target"
+                cp audk/Build/Ovmf"$dsc"/"$target"_GCC/FV/OVMF.fd artifacts/"$arch"/"$target"
                 echo "OVMF for $arch $target $dsc built successfully"
                 echo "Compressing artifacts to zip"
                 zip -r -j AUDK-OVMF-"$arch"-"$target".zip artifacts/"$arch"/"$target"
@@ -210,11 +210,11 @@ jobs:
                 arch=${ARCHS[$i]}
                 dsc=${DSC[$i]}
                 echo "Building Shell for $arch $target $dsc"
-                build -a "$arch" -b "$target" -t GCC5 -p ShellPkg/ShellPkg.dsc
+                build -a "$arch" -b "$target" -t GCC -p ShellPkg/ShellPkg.dsc
                 cd ..
                 rm -rf artifacts/"$arch"/"$target"
                 mkdir -p artifacts/"$arch"/"$target"
-                cp audk/Build/Shell/"$target"_GCC5/"$arch"/Shell_"$GUID".efi artifacts/"$arch"/"$target"/BOOT"$arch".efi
+                cp audk/Build/Shell/"$target"_GCC/"$arch"/Shell_"$GUID".efi artifacts/"$arch"/"$target"/BOOT"$arch".efi
                 echo "Shell for $arch $target $dsc built successfully"
                 echo "Compressing artifacts to zip"
                 zip -r -j AUDK-Shell-"$arch"-"$target".zip artifacts/"$arch"/"$target"
