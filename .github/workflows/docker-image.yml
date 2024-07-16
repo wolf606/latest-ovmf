@@ -196,38 +196,6 @@ jobs:
             ARCHS: IA32,X64
             TARGETS: RELEASE,DEBUG
             DSC: Ia32,X64
-        - name: Build Shell
-          working-directory: audk
-          run: |
-            # Source edksetup script
-            . ./edksetup.sh
-            IFS=', ' read -r -a TARGETS <<< "$TARGETS"
-            IFS=', ' read -r -a ARCHS <<< "$ARCHS"
-            IFS=', ' read -r -a DSC <<< "$DSC"
-            IFS=', ' read -r -a GUID <<< "$GUID"
-            for target in "${TARGETS[@]}"; do
-              for i in "${!ARCHS[@]}"; do
-                arch=${ARCHS[$i]}
-                dsc=${DSC[$i]}
-                echo "Building Shell for $arch $target $dsc"
-                build -a "$arch" -b "$target" -t GCC -p ShellPkg/ShellPkg.dsc
-                cd ..
-                rm -rf artifacts/"$arch"/"$target"
-                mkdir -p artifacts/"$arch"/"$target"
-                cp audk/Build/Shell/"$target"_GCC/"$arch"/Shell_"$GUID".efi artifacts/"$arch"/"$target"/BOOT"$arch".efi
-                echo "Shell for $arch $target $dsc built successfully"
-                echo "Compressing artifacts to zip"
-                zip -r -j AUDK-Shell-"$arch"-"$target".zip artifacts/"$arch"/"$target"
-                cd audk
-              done
-            done
-            cd ..
-            mv AUDK-Shell-*.zip artifacts/zip
-          env:
-            ARCHS: IA32,X64
-            TARGETS: RELEASE,DEBUG
-            DSC: Ia32,X64
-            GUID: EA4BB293-2D7F-4456-A681-1F22F42CD0BC
         - name: Upload artifacts
           uses: actions/upload-artifact@v2
           with:
