@@ -123,42 +123,30 @@ jobs:
             path: artifacts/zip
             if-no-files-found: error
             retention-days: 1
-    
-    release:
-      name: Create Release and Upload Artifacts
-      runs-on: ubuntu-latest
-      steps:
-      - uses: actions/checkout@v2  # Checkout code
-
-      - name: Clone latest EDK2 release
-        run: |
-          # Get latest release
-          LATEST_RELEASE=$(curl -s "https://api.github.com/repos/tianocore/edk2/releases/latest" | grep -o '"tag_name": "[^"]*' | sed 's/"tag_name": "//')
-          export LATEST_RELEASE
-          echo "Latest Release: $LATEST_RELEASE"
-
-      # Create Release with information from tags
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: "EDK2 ${{ env.LATEST_RELEASE }} ${{ github.ref }}"
-          body: |
-            Changes in this Release
-            # Add details about the changes here
-          draft: false  # Set to true for draft releases
-          prerelease: false  # Set to true for pre-release versions
-
-      # Upload the artifact zip folder to the release
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: artifacts/zip  # Path to the folder containing zip files
-          asset_name: artifacts.zip  # Name of the uploaded zip containing all artifacts
-          asset_content_type: application/zip
+  
+        # Create Release with information from tags
+        - name: Create Release
+          id: create_release
+          uses: actions/create-release@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            tag_name: ${{ github.ref }}
+            release_name: "EDK2 ${{ env.LATEST_RELEASE }} ${{ github.ref }}"
+            body: |
+              Changes in this Release
+              # Add details about the changes here
+            draft: false  # Set to true for draft releases
+            prerelease: false  # Set to true for pre-release versions
+  
+        # Upload the artifact zip folder to the release
+        - name: Upload Release Asset
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: artifacts/zip  # Path to the folder containing zip files
+            asset_name: artifacts.zip  # Name of the uploaded zip containing all artifacts
+            asset_content_type: application/zip
+  
