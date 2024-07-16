@@ -52,7 +52,7 @@ jobs:
             . ./edksetup.sh
             # Run tests
             make -C BaseTools
-        - name: Build OVMF
+        - name: Build Shell
           working-directory: edk2
           run: |
             # Source edksetup script
@@ -73,7 +73,7 @@ jobs:
                 cp edk2/Build/Ovmf"$dsc"/"$target"_GCC5/FV/OVMF.fd artifacts/"$arch"/"$target"
                 echo "OVMF for $arch $target $dsc built successfully"
                 echo "Compressing artifacts to zip"
-                zip -r OVMF-"$arch"-"$target".zip artifacts/"$arch"/"$target"
+                zip -r -j OVMF-"$arch"-"$target".zip artifacts/"$arch"/"$target"
                 cd edk2
               done
             done
@@ -105,7 +105,7 @@ jobs:
                 cp edk2/Build/Shell/"$target"_GCC5/"$arch"/Shell_"$GUID".efi artifacts/"$arch"/"$target"/BOOT"$arch".efi
                 echo "Shell for $arch $target $dsc built successfully"
                 echo "Compressing artifacts to zip"
-                zip -r Shell-"$arch"-"$target".zip artifacts/"$arch"/"$target"
+                zip -r -j Shell-"$arch"-"$target".zip artifacts/"$arch"/"$target"
                 cd edk2
               done
             done
