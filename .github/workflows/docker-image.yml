@@ -150,7 +150,6 @@ jobs:
             mkdir artifacts
         - name: Clone latest AUDK release
           run: |
-            cd ~
             # Clone EDK2 repository
             git clone --depth 1 "https://github.com/acidanthera/audk.git" -b "master" audk
         - name: Update submodules
