@@ -20,13 +20,19 @@ for x64 and IA-32.
 
 |   GCC5  |                                                                              DEBUG                                                                              |                                                                                   RELEASE                                                                                   |
 |:-------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-|   X64   |    [DEBUGX64\_OVMF.fd](bin/DEBUGX64_OVMF.fd)    |    [RELEASEX64\_OVMF.fd](bin/RELEASEX64_OVMF.fd)    |
-|   IA32  | [DEBUGIa32\_OVMF.fd](bin/DEBUGIa32_OVMF.fd) | [RELEASEIa32\_OVMF.fd](bin/RELEASEIa32_OVMF.fd) |
+|   X64   |    [DEBUGX64\_OVMF.fd](https://github.com/wolf606/latest-ovmf/releases/download/edk2-stable202405/EDK2-OVMF-X64-DEBUG.zip)    |    [RELEASEX64\_OVMF.fd](https://github.com/wolf606/latest-ovmf/releases/download/edk2-stable202405/EDK2-OVMF-X64-RELEASE.zip)    |
+|   IA32  | [DEBUGIa32\_OVMF.fd](https://github.com/wolf606/latest-ovmf/releases/download/edk2-stable202405/EDK2-OVMF-IA32-DEBUG.zip) | [RELEASEIa32\_OVMF.fd](https://github.com/wolf606/latest-ovmf/releases/download/edk2-stable202405/EDK2-OVMF-IA32-RELEASE.zip) |
 
 ### UEFI Shell
 
 |     GCC5    |                             DEBUG                             |                              RELEASE                              |
 |:-----------:|:-------------------------------------------------------------:|:-----------------------------------------------------------------:|
-|     X64     |         [DEBUGX64\_Shell.efi](bin/DEBUGX64_Shell.efi)         |         [RELEASEX64\_Shell.efi](bin/RELEASEX64_Shell.efi)         |
-|     IA32    |        [DEBUGIA32\_Shell.efi](bin/DEBUGIA32_Shell.efi)        |        [RELEASEIA32\_Shell.efi](bin/RELEASEIA32_Shell.efi)        |
+|     X64     |         [DEBUGX64\_Shell.efi](https://github.com/wolf606/latest-ovmf/releases/download/edk2-stable202405/EDK2-Shell-X64-DEBUG.zip)         |         [RELEASEX64\_Shell.efi](https://github.com/wolf606/latest-ovmf/releases/download/edk2-stable202405/EDK2-Shell-X64-RELEASE.zip)         |
+|     IA32    |        [DEBUGIA32\_Shell.efi](https://github.com/wolf606/latest-ovmf/releases/download/edk2-stable202405/EDK2-Shell-IA32-DEBUG.zip)        |        [RELEASEIA32\_Shell.efi](https://github.com/wolf606/latest-ovmf/releases/download/edk2-stable202405/EDK2-Shell-IA32-RELEASE.zip)        |
 
+### UEFI images for QEMU from the Acidanthera UEFI Development Kit
+
+|   GCC5  |                                                                              DEBUG                                                                              |                                                                                   RELEASE                                                                                   |
+|:-------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+|   X64   |    [DEBUGX64\_OVMF.fd](https://github.com/wolf606/latest-ovmf/releases/download/AUDK-19fa914-master/AUDK-OVMF-X64-DEBUG.zip)    |    [RELEASEX64\_OVMF.fd](https://github.com/wolf606/latest-ovmf/releases/download/AUDK-19fa914-master/AUDK-OVMF-X64-RELEASE.zip)    |
+|   IA32  | [DEBUGIa32\_OVMF.fd](https://github.com/wolf606/latest-ovmf/releases/download/AUDK-19fa914-master/AUDK-OVMF-IA32-DEBUG.zip) | [RELEASEIa32\_OVMF.fd](https://github.com/wolf606/latest-ovmf/releases/download/AUDK-19fa914-master/AUDK-OVMF-IA32-RELEASE.zip) |
