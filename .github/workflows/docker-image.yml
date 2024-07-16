@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-    build:
+    edk2-build:
 
       runs-on: ubuntu-latest
   
@@ -65,7 +65,7 @@ jobs:
                 arch=${ARCHS[$i]}
                 dsc=${DSC[$i]}
                 echo "Building OVMF for $arch $target $dsc"
-                build -a "$arch" -b "$target" -t GCC5 -p OvmfPkg/OvmfPkg"$dsc".dsc -DSECURE_BOOT_ENABLE=TRUE
+                build -a "$arch" -b "$target" -t GCC5 -p OvmfPkg/OvmfPkg"$dsc".dsc -D SECURE_BOOT_ENABLE=TRUE
                 cd ..
                 mkdir -p artifacts/"$arch"/"$target"
                 cp edk2/Build/Ovmf"$dsc"/"$target"_GCC5/FV/OVMF_CODE.fd artifacts/"$arch"/"$target"
@@ -73,13 +73,13 @@ jobs:
                 cp edk2/Build/Ovmf"$dsc"/"$target"_GCC5/FV/OVMF.fd artifacts/"$arch"/"$target"
                 echo "OVMF for $arch $target $dsc built successfully"
                 echo "Compressing artifacts to zip"
-                zip -r -j OVMF-"$arch"-"$target".zip artifacts/"$arch"/"$target"
+                zip -r -j EDK2-OVMF-"$arch"-"$target".zip artifacts/"$arch"/"$target"
                 cd edk2
               done
             done
             cd ..
             mkdir -p artifacts/zip
-            mv OVMF-*.zip artifacts/zip
+            mv EDK2-OVMF-*.zip artifacts/zip
           env:
             ARCHS: IA32,X64
             TARGETS: RELEASE,DEBUG
@@ -105,12 +105,12 @@ jobs:
                 cp edk2/Build/Shell/"$target"_GCC5/"$arch"/Shell_"$GUID".efi artifacts/"$arch"/"$target"/BOOT"$arch".efi
                 echo "Shell for $arch $target $dsc built successfully"
                 echo "Compressing artifacts to zip"
-                zip -r -j Shell-"$arch"-"$target".zip artifacts/"$arch"/"$target"
+                zip -r -j EDK2-Shell-"$arch"-"$target".zip artifacts/"$arch"/"$target"
                 cd edk2
               done
             done
             cd ..
-            mv Shell-*.zip artifacts/zip
+            mv EDK2-Shell-*.zip artifacts/zip
           env:
             ARCHS: IA32,X64
             TARGETS: RELEASE,DEBUG
@@ -120,6 +120,119 @@ jobs:
           uses: actions/upload-artifact@v2
           with:
             name: OVMF
+            path: artifacts/zip
+            if-no-files-found: error
+            retention-days: 1
+    
+    audk-build:
+
+      runs-on: ubuntu-latest
+  
+      steps:
+        - uses: actions/checkout@v4
+        - name: Install dependencies
+          run: |
+            # Update package lists
+            sudo apt-get update
+            # Install required packages
+            sudo apt-get install -y \
+              build-essential \
+              git \
+              uuid-dev \
+              acpica-tools \
+              nasm \
+              python3 \
+              python3-pip \
+              curl
+            # Create symbolic link for python
+            sudo ln -s $(which python3) /usr/local/bin/python
+            # Create artifacts folder
+            mkdir artifacts
+        - name: Clone latest AUDK release
+          run: |
+            cd ~
+            # Clone EDK2 repository
+            git clone --depth 1 "https://github.com/acidanthera/audk.git" -b "master" audk
+        - name: Update submodules
+          working-directory: audk
+          run: |
+            # Update submodules
+            git submodule update --init
+        - name: Run tests
+          working-directory: audk
+          run: |
+            # Source edksetup script
+            . ./edksetup.sh
+            # Run tests
+            make -C BaseTools
+        - name: Build OVMF
+          working-directory: audk
+          run: |
+            # Source edksetup script
+            . ./edksetup.sh
+            IFS=', ' read -r -a TARGETS <<< "$TARGETS"
+            IFS=', ' read -r -a ARCHS <<< "$ARCHS"
+            IFS=', ' read -r -a DSC <<< "$DSC"
+            for target in "${TARGETS[@]}"; do
+              for i in "${!ARCHS[@]}"; do
+                arch=${ARCHS[$i]}
+                dsc=${DSC[$i]}
+                echo "Building OVMF for $arch $target $dsc"
+                build -a "$arch" -b "$target" -t GCC5 -p OvmfPkg/OvmfPkg"$dsc".dsc -D SECURE_BOOT_ENABLE=TRUE -D LINUX_LOADER
+                cd ..
+                mkdir -p artifacts/"$arch"/"$target"
+                cp audk/Build/Ovmf"$dsc"/"$target"_GCC5/FV/OVMF_CODE.fd artifacts/"$arch"/"$target"
+                cp audk/Build/Ovmf"$dsc"/"$target"_GCC5/FV/OVMF_VARS.fd artifacts/"$arch"/"$target"
+                cp audk/Build/Ovmf"$dsc"/"$target"_GCC5/FV/OVMF.fd artifacts/"$arch"/"$target"
+                echo "OVMF for $arch $target $dsc built successfully"
+                echo "Compressing artifacts to zip"
+                zip -r -j AUDK-OVMF-"$arch"-"$target".zip artifacts/"$arch"/"$target"
+                cd audk
+              done
+            done
+            cd ..
+            mkdir -p artifacts/zip
+            mv AUDK-OVMF-*.zip artifacts/zip
+          env:
+            ARCHS: IA32,X64
+            TARGETS: RELEASE,DEBUG
+            DSC: Ia32,X64
+        - name: Build Shell
+          working-directory: audk
+          run: |
+            # Source edksetup script
+            . ./edksetup.sh
+            IFS=', ' read -r -a TARGETS <<< "$TARGETS"
+            IFS=', ' read -r -a ARCHS <<< "$ARCHS"
+            IFS=', ' read -r -a DSC <<< "$DSC"
+            IFS=', ' read -r -a GUID <<< "$GUID"
+            for target in "${TARGETS[@]}"; do
+              for i in "${!ARCHS[@]}"; do
+                arch=${ARCHS[$i]}
+                dsc=${DSC[$i]}
+                echo "Building Shell for $arch $target $dsc"
+                build -a "$arch" -b "$target" -t GCC5 -p ShellPkg/ShellPkg.dsc
+                cd ..
+                rm -rf artifacts/"$arch"/"$target"
+                mkdir -p artifacts/"$arch"/"$target"
+                cp audk/Build/Shell/"$target"_GCC5/"$arch"/Shell_"$GUID".efi artifacts/"$arch"/"$target"/BOOT"$arch".efi
+                echo "Shell for $arch $target $dsc built successfully"
+                echo "Compressing artifacts to zip"
+                zip -r -j AUDK-Shell-"$arch"-"$target".zip artifacts/"$arch"/"$target"
+                cd audk
+              done
+            done
+            cd ..
+            mv AUDK-Shell-*.zip artifacts/zip
+          env:
+            ARCHS: IA32,X64
+            TARGETS: RELEASE,DEBUG
+            DSC: Ia32,X64
+            GUID: EA4BB293-2D7F-4456-A681-1F22F42CD0BC
+        - name: Upload artifacts
+          uses: actions/upload-artifact@v2
+          with:
+            name: AUDK
             path: artifacts/zip
             if-no-files-found: error
             retention-days: 1
