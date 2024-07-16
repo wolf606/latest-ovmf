@@ -177,7 +177,7 @@ jobs:
                 arch=${ARCHS[$i]}
                 dsc=${DSC[$i]}
                 echo "Building OVMF for $arch $target $dsc"
-                build -a "$arch" -b "$target" -t GCC -p OvmfPkg/OvmfPkg"$dsc".dsc -D SECURE_BOOT_ENABLE=TRUE -D LINUX_LOADER
+                build -a "$arch" -b "$target" -t GCC -p OvmfPkg/OvmfPkg"$dsc".dsc -D LINUX_LOADER
                 cd ..
                 mkdir -p artifacts/"$arch"/"$target"
                 cp audk/Build/Ovmf"$dsc"/"$target"_GCC/FV/OVMF_CODE.fd artifacts/"$arch"/"$target"
