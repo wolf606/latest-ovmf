@@ -52,7 +52,7 @@ jobs:
             . ./edksetup.sh
             # Run tests
             make -C BaseTools
-        - name: Build Shell
+        - name: Build OVMF
           working-directory: edk2
           run: |
             # Source edksetup script
@@ -84,7 +84,7 @@ jobs:
             ARCHS: IA32,X64
             TARGETS: RELEASE,DEBUG
             DSC: Ia32,X64
-        - name: Build OVMF
+        - name: Build Shell
           working-directory: edk2
           run: |
             # Source edksetup script
@@ -123,30 +123,3 @@ jobs:
             path: artifacts/zip
             if-no-files-found: error
             retention-days: 1
-  
-        # Create Release with information from tags
-        - name: Create Release
-          id: create_release
-          uses: actions/create-release@v1
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            tag_name: ${{ github.ref }}
-            release_name: "EDK2 ${{ env.LATEST_RELEASE }} ${{ github.ref }}"
-            body: |
-              Changes in this Release
-              # Add details about the changes here
-            draft: false  # Set to true for draft releases
-            prerelease: false  # Set to true for pre-release versions
-  
-        # Upload the artifact zip folder to the release
-        - name: Upload Release Asset
-          uses: actions/upload-release-asset@v1
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: artifacts/zip  # Path to the folder containing zip files
-            asset_name: artifacts.zip  # Name of the uploaded zip containing all artifacts
-            asset_content_type: application/zip
-  
